@@ -156,6 +156,21 @@ git push origin main
 ```
 You only need to submit your GitHub repo link for any code assignment.
 ---
+## Updating Your Repo before each session
+New labs (lab02, lab03, …) will be released by adding new folders to the course repository.
+Your fork will NOT update automatically.
+
+Step 1: Sync your fork on GitHub
+  Go to your forked repo on GitHub
+  Click Sync fork → Update branch
+Step 2: Update your local repo (your laptop)
+Open Ubuntu/macOS Terminal inside your repo folder and run:
+```
+git pull
+
+```
+After that, you should see the new lab folder (for example lab02/) in your local files.
+
 ## Academic Integrity
 
 You are encouraged to:
