@@ -28,6 +28,7 @@
 #include <stdbool.h>
 #include <stddef.h>  // size_t
 #include <string.h>  // strlen
+#include <stdlib.h>
 
 bool isValid(const char *s) {
     // TODO: Implement using a stack.
@@ -54,6 +55,44 @@ bool isValid(const char *s) {
     // Note:
     // - Input contains only bracket characters, per the prompt.
 
-    (void)s; // remove after implementing
-    return false; // placeholder
+    if (s == NULL) return false;
+
+    size_t len = strlen(s);
+
+    if (len % 2 != 0) return false;
+    if (len == 0) return true;
+
+    // Dynamically allocate stack
+    char *stack = (char *)malloc(len * sizeof(char));
+    if (stack == NULL) return false;  // safety
+
+    int top = -1;
+
+    for (size_t i = 0; i < len; i++) {
+        char c = s[i];
+
+        if (c == '(' || c == '[' || c == '{') {
+            stack[++top] = c;
+        } else {
+            if (top < 0) {
+                free(stack);
+                return false;
+            }
+
+            char open = stack[top--];
+
+            if ((c == ')' && open != '(') ||
+                (c == ']' && open != '[') ||
+                (c == '}' && open != '{')) {
+                free(stack);
+                return false;
+            }
+        }
+    }
+
+    bool valid = (top == -1);
+    free(stack);
+    return valid;
+    return false;
+  
 }
