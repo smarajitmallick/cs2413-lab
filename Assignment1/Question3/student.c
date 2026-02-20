@@ -28,33 +28,34 @@
 int* plusOne(int* digits, int digitsSize, int* returnSize) {
     // TODO: implement
 
-    int* result = (int*)malloc(sizeof(int) * (digitsSize + 1)); // max possible size
+    // Calculating the maximum possible size
+    int* outcome = (int*)malloc(sizeof(int) * (digitsSize + 1)); 
 
-    // Copy original digits
+
     for (int i = 0; i < digitsSize; i++) {
-        result[i] = digits[i];
+        outcome[i] = digits[i];
     }
 
-    // Add one from the end
-    int carry = 1;
+    // Adding one from the end
+    int carryover = 1;
     for (int i = digitsSize - 1; i >= 0; i--) {
-        int sum = result[i] + carry;
-        result[i] = sum % 10;
-        carry = sum / 10;
+        int sum = outcome[i] + carryover;
+        outcome[i] = sum % 10;
+        carryover = sum / 10;
     }
 
-    // If carry is 1, shift array and add 1 at front
-    if (carry == 1) {
+    // If carry == 1, shifting array and adding 1 at the front
+    if (carryover == 1) {
         for (int i = digitsSize; i > 0; i--) {
-            result[i] = result[i-1];
+            outcome[i] = outcome[i-1];
         }
-        result[0] = 1;
+        outcome[0] = 1;
         *returnSize = digitsSize + 1;
     } else {
         *returnSize = digitsSize;
     }
 
-    return result;
+    return outcome;
 }
 
 
