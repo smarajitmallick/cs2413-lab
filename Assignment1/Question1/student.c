@@ -22,7 +22,7 @@ void merge(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n) {
     (void)nums1Size;
     (void)nums2Size;
 
-    // Merge from the back
+    // Merging elements from the back
     while (i >= 0 && j >= 0) {
         if (nums1[i] > nums2[j]) {
             nums1[k--] = nums1[i--];
@@ -31,7 +31,7 @@ void merge(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n) {
         }
     }
 
-    // If nums2 still has elements left, copy them
+    // If nums2 still has elements left, then attaching them to the array
     while (j >= 0) {
         nums1[k--] = nums2[j--];
     }
