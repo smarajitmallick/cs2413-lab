@@ -25,10 +25,10 @@
 // ------------------------------------------------------------
 
 #include "Student.h"
-#include <stdbool.h>
+#include <stdbool.h>    // for boolean type
 #include <stddef.h>  // size_t
 #include <string.h>  // strlen
-#include <stdlib.h>
+#include <stdlib.h> // for malloc / free
 
 bool isValid(const char *s) {
     // TODO: Implement using a stack.
@@ -54,32 +54,32 @@ bool isValid(const char *s) {
     //
     // Note:
     // - Input contains only bracket characters, per the prompt.
-
+    // Returning false if input pointer is NULL (invalid input)
     if (s == NULL) return false;
-
+    // Getting the legth of string
     size_t len = strlen(s);
-
+    // Odd-length strings can never be valid (must be pairs) so returning false 
     if (len % 2 != 0) return false;
-    if (len == 0) return true;
+    if (len == 0) return true;  // Empty strings are valid 
 
     // Dynamically allocate stack
     char *stack = (char *)malloc(len * sizeof(char));
-    if (stack == NULL) return false;  // safety
+    if (stack == NULL) return false;  // If allocation fails, returning false
 
     int top = -1;
-
+    // Traversing string character by character
     for (size_t i = 0; i < len; i++) {
-        char c = s[i];
+        char c = s[i];  // Extracting current character
 
         if (c == '(' || c == '[' || c == '{') {
-            stack[++top] = c;
+            stack[++top] = c;       //Incrementing top then store
         } else {
             if (top < 0) {
                 free(stack);
                 return false;
             }
 
-            char open = stack[top--];
+            char open = stack[top--];   // Pop the top
 
             if ((c == ')' && open != '(') ||
                 (c == ']' && open != '[') ||
@@ -90,8 +90,9 @@ bool isValid(const char *s) {
         }
     }
 
+    // If stack is empty, all brackets matched correctly
     bool valid = (top == -1);
-    free(stack);
+    free(stack);    // Free allocated stack memory
     return valid;
     return false;
   
