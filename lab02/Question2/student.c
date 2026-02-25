@@ -35,61 +35,83 @@
 //   make run2
 // ------------------------------------------------------------
 
-#include "Student.h"
-#include <stdlib.h>   // malloc, free
-#include <stdbool.h>  // bool
+#include "Student.h"    // Contains the struct definition
+#include <stdlib.h>   // to access malloc() & free()
+#include <stdbool.h>  // to get a bool type
 
 MyCircularQueue* myCircularQueueCreate(int k) {
-    // TODO:
-    // - Allocate MyCircularQueue
-    // - Allocate the internal buffer `data` of length k
-    // - Initialize capacity, head, tail, size
+    if (k <= 0) return NULL; // if invalid capacity then return NULL
+
+    MyCircularQueue* obj = (MyCircularQueue*)malloc(sizeof(MyCircularQueue));
+    if (!obj) return NULL;  // If malloc() fails then return NULL 
+
+    obj->data = (int*)malloc(sizeof(int) * k);
+    if (!obj->data)    // if allocation fails 
+    { 
+        free(obj);     // Front index starts at 0
+        return NULL;    // return null
+    }
+
+    obj->capacity = k;  // Has the maximum number of elements 
+    obj->head = 0; // Front index starts at 0
+    obj->tail = 0; // Next insertion spot
+    obj->size = 0; 
+    return obj;     // Return pointer to created queue
+
 
 }
 
 bool myCircularQueueEnQueue(MyCircularQueue* obj, int value) {
-    // TODO:
-    // - If full, return false
-    // - Write value at tail, advance tail (wrap), size++
+    if (!obj || obj->size == obj->capacity) return false;   // if queue is full or invalid then false
+
+    obj->data[obj->tail] = value; //  Insering value at tail position
+    obj->tail = (obj->tail + 1) % obj->capacity;    //Moving tail forward
+    obj->size++;        // Increasing the number of stored elements  
+
+    return true;
 
 }
 
 bool myCircularQueueDeQueue(MyCircularQueue* obj) {
-    // TODO:
-    // - If empty, return false
-    // - Advance head (wrap), size--
+    if (!obj || obj->size == 0) return false; // if queue is empty it cannot remove 
+
+    obj->head = (obj->head + 1) % obj->capacity;
+    obj->size--;    // Decreasing the number of stored elemnts
+
+    return true;
 
 }
 
 int myCircularQueueFront(MyCircularQueue* obj) {
-    // TODO:
-    // - Return -1 if empty
-    // - Otherwise return data[head]
+    if (!obj || obj->size == 0) return -1;     // if its empty then return -1 
+    
+    return obj->data[obj->head];    // Return element at front
 
 }
 
 int myCircularQueueRear(MyCircularQueue* obj) {
-    // TODO:
-    // - Return -1 if empty
-    // - Otherwise return the last inserted element
-    //   (tail points to next insertion position)
-
+    if (!obj || obj->size == 0) return -1;  // if empty return -1
+    // tail points to next insertion spot so last element is one position before tail
+    int rearIndex = (obj->tail - 1 + obj->capacity) % obj->capacity;
+    return obj->data[rearIndex];
 }
 
 bool myCircularQueueIsEmpty(MyCircularQueue* obj) {
-    // TODO:
-    // - Return true if size == 0
+    if (!obj) return true;  //Invalid pointer so treating it as empty
+    return obj->size == 0;  // it is Empty if size = 0
 
 }
 
 bool myCircularQueueIsFull(MyCircularQueue* obj) {
-    // TODO:
-    // - Return true if size == capacity
+    if (!obj) return false; // invalid Pointer cause not full
+    return obj->size == obj->capacity; // it is full if size equals capacity
  
 }
 
 void myCircularQueueFree(MyCircularQueue* obj) {
-    // TODO:
-    // - Free internal buffer then free obj
+    if (!obj) return;   // if NULL 
+
+    free(obj->data);    // Free internal array first
+    free(obj);          // then free struct
   
 }
