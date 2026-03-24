@@ -47,17 +47,20 @@ struct TreeNode {
     struct TreeNode *right;
 };
 
+
+// function to calculate the maximum depth (height) of a binary tree
 int maxDepth(struct TreeNode* root) {
   // TODO: implement
-
+  // If the current node is NULL, the depth is 0
   if(root == NULL)
   {
     return 0;
   }
-
+  // recursively finding the depth of the left subtree
   int left = maxDepth(root->left);
+  // recursively finding the depth of the right subtree
   int right =  maxDepth(root->right);
-
+   // returns the larger of the two depths + 1 for the current node
    return 1 + (left > right ? left : right);
 
 }
