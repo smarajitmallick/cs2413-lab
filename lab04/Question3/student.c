@@ -56,6 +56,37 @@ struct TreeNode {
 };
 
 
+// helper function to recursively build numbers
+int dfs(struct TreeNode* node, int current) {
+    // If node is NULL, no contribution to sum
+    if (node == NULL) {
+        return 0;
+    }
+
+    // updating the current number:
+    // shifting digits left (multiply by 10) and adding current node value
+    current = current * 10 + node->val;
+
+    // if it's a leaf node then return the formed number
+    if (node->left == NULL && node->right == NULL) {
+        return current;
+    }
+
+    // recurrsion for left and right subtrees and sum their results
+    return dfs(node->left, current) + dfs(node->right, current);
+}
+
+
 int sumNumbers(struct TreeNode* root) {
       // TODO: implement
+
+
+      // if tree is empty then sum is 0
+    if (root == NULL) {
+        return 0;
+    }
+
+    // start DFS with initial value 0
+    return dfs(root, 0);
+
 }
