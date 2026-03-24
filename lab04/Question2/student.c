@@ -48,8 +48,42 @@ struct TreeNode {
     struct TreeNode *right;
 };
 
+// helper function to check if two subtrees are mirror images
 
+bool isMirror(struct TreeNode* left, struct TreeNode* right) {
+    
+  // to check if both nodes are NULL, they are symmetric
+    if (left == NULL && right == NULL) {
+        return true;
+    }
+
+// if only one is NULL and not symmetric
+
+    if (left == NULL || right == NULL) {
+        return false;
+    }
+
+// If values are different and not symmetric
+
+    if (left->val != right->val) {
+        return false;
+    }
+
+    // Checking 
+    // 1. left subtree of 'left' with right subtree of 'right'
+    // 2. right subtree of 'left' with left subtree of 'right'
+
+    return isMirror(left->left, right->right) &&
+           isMirror(left->right, right->left);
+}
 
 bool isSymmetric(struct TreeNode* root) {
   // TODO: implement
+// an empty tree is symmetric
+  if (root == NULL) {
+        return true;
+    }
+// checking if left and right subtrees are mirrors
+    return isMirror(root->left, root->right);
+
 }
