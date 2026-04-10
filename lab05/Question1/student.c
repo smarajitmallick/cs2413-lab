@@ -30,11 +30,9 @@ As you scan the array, for each nums[i], think about whether the value
 #include <stdlib.h>
 
 /*
-Optional helper structure for a hash table entry.
-
-You may use this structure if you want to build your own hash table.
-key   -> the number from the array
-value -> the index of that number
+Node structure for hash table (linked list for collision handling)
+key   -> number from array
+value -> index of that number
 */
 typedef struct Node {
     int key;
@@ -43,60 +41,114 @@ typedef struct Node {
 } Node;
 
 /*
-Optional table size for a simple hash table implementation.
-You may change this value if needed.
+Prime number table size helps reduce collisions
 */
 #define TABLE_SIZE 1009
 
 /*
-Optional helper function declarations.
-
-You may use them, modify them, or remove them if you prefer your own design.
-*/
-static int hash(int key);
-static void insert(Node* table[], int key, int value);
-static int find(Node* table[], int key, int* value);
-static void freeTable(Node* table[]);
-
-/*
-Return an array of size 2 containing the indices of the two numbers
-whose sum equals target.
-*/
-int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
-    /* Write your code here */
-
-    *returnSize = 0;
-    return NULL;
-}
-
-/*
-Optional helper: compute a hash index for a key.
+Hash function:
+Ensures index is always non-negative and within table size
 */
 static int hash(int key) {
-    /* Write your code here if you use this helper */
-    return 0;
+    if (key < 0) key = -key;          // handles negative keys
+    return key % TABLE_SIZE;          // mapping key to index
 }
 
 /*
-Optional helper: insert (key, value) into the hash table.
+Inserting (key, value) into hash table
+Uses chaining (linked list) to handle collisions
 */
 static void insert(Node* table[], int key, int value) {
-    /* Write your code here if you use this helper */
+    int index = hash(key);            // computing hash index
+
+    // Create new node
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->key = key;
+    newNode->value = value;
+
+    // Inserting at head of linked list
+    newNode->next = table[index];
+    table[index] = newNode;
 }
 
 /*
-Optional helper: search for key in the hash table.
-If found, store the associated value in *value and return 1.
-Otherwise return 0.
+Finding a key in the hash table
+If found:
+    - store index in *value
+    - return 1 (true)
+Else return 0 (false)
 */
 static int find(Node* table[], int key, int* value) {
-    /* Write your code here if you use this helper */
-    return 0;
+    int index = hash(key);            // computing hash index
+    Node* curr = table[index];
+
+    // Traversing linked list at this index
+    while (curr != NULL) {
+        if (curr->key == key) {
+            *value = curr->value;     // storing index
+            return 1;                 // found 
+        }
+        curr = curr->next;
+    }
+    return 0;                         // not found
 }
 
 /*
-Optional helper: free all memory used by the hash table.
+Free all memory used by hash table
 */
 static void freeTable(Node* table[]) {
-    /* Write your code here if you use this helper */
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        Node* curr = table[i];
+        while (curr != NULL) {
+            Node* temp = curr;
+            curr = curr->next;
+            free(temp);               // free each node
+        }
+    }
+}
+
+/*
+Main function: Two Sum
+Returns indices of two numbers that add up to target
+*/
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+
+    // Allocating hash table and initializing to NULL
+    Node* table[TABLE_SIZE];
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        table[i] = NULL;
+    }
+
+    // Iterating through array
+    for (int i = 0; i < numsSize; i++) {
+
+        int complement = target - nums[i];  // number we need
+
+        int foundIndex;
+
+        // Checking if complement already exists in hash table
+        if (find(table, complement, &foundIndex)) {
+
+            // Allocatingresult array of size 2
+            int* result = (int*)malloc(2 * sizeof(int));
+
+            result[0] = foundIndex;  // index of complement
+            result[1] = i;           // current index
+
+            *returnSize = 2;
+
+            // Free hash table before returning
+            freeTable(table);
+
+            return result;
+        }
+
+        // If not found, insert current number into hash table
+        insert(table, nums[i], i);
+    }
+
+    // If no solution (though problem guarantees one)
+    *returnSize = 0;
+    freeTable(table);
+    return NULL;
 }
